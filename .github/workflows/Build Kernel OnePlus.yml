@@ -734,6 +734,10 @@ jobs:
           grep -nE '^(REPO_OWNER|REPO_NAME|REPO_BRANCH|KSU_VERSION_API|KSU_VERSION_FULL|VERSION_TAG|GIT_BIN|CURL_BIN)' kernel/Makefile
           echo "::endgroup::"
 
+      - name: Fix SukiSU kernel_umount upstream build error
+        run: |
+          bash "$GITHUB_WORKSPACE/scripts/fix_sukisu_kernel_umount.sh"
+
       - name: Apply Fake Patches
         if: ${{ github.event.inputs.SUSFS_META != '-1' }}
         run: |
