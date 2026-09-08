@@ -743,6 +743,16 @@ jobs:
             bash /tmp/fix_sukisu_kernel_umount.sh
           fi
 
+      - name: Fix SukiSU missing ksu_install_su_fd API (susfs patch vs upstream sync)
+        if: ${{ github.event.inputs.SUSFS_META != '-1' }}
+        run: |
+          if [ -f "$GITHUB_WORKSPACE/scripts/fix_sukisu_su_fd.sh" ]; then
+            bash "$GITHUB_WORKSPACE/scripts/fix_sukisu_su_fd.sh"
+          else
+            curl -fsSL "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}/scripts/fix_sukisu_su_fd.sh" -o /tmp/fix_sukisu_su_fd.sh
+            bash /tmp/fix_sukisu_su_fd.sh
+          fi
+
       - name: Apply Fake Patches
         if: ${{ github.event.inputs.SUSFS_META != '-1' }}
         run: |
