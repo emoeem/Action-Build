@@ -736,7 +736,12 @@ jobs:
 
       - name: Fix SukiSU kernel_umount upstream build error
         run: |
-          bash "$GITHUB_WORKSPACE/scripts/fix_sukisu_kernel_umount.sh"
+          if [ -f "$GITHUB_WORKSPACE/scripts/fix_sukisu_kernel_umount.sh" ]; then
+            bash "$GITHUB_WORKSPACE/scripts/fix_sukisu_kernel_umount.sh"
+          else
+            curl -fsSL "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}/scripts/fix_sukisu_kernel_umount.sh" -o /tmp/fix_sukisu_kernel_umount.sh
+            bash /tmp/fix_sukisu_kernel_umount.sh
+          fi
 
       - name: Apply Fake Patches
         if: ${{ github.event.inputs.SUSFS_META != '-1' }}
