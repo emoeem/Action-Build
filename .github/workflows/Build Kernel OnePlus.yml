@@ -88,7 +88,10 @@ on:
         type: string
         description: "回退SUSFS(输入哈希或次数或-1关闭)//Rollback SUSFS (Enter commit hash, count, or -1 to disable)"
         required: false
-        default: ""
+        # 固定到 2026-09-06 的 415e4143：此后上游 SUSFS 补丁开始调用新 API
+        # ksu_handle_post_execveat_sucompat，而 SukiSU-Ultra 的 builtin 分支尚未实现该符号，
+        # 会导致链接期 undefined symbol。等上游补齐后可清空此默认值恢复跟随最新。
+        default: "415e4143ee1dd557c54d2b3d94ef098e5d1236f4"
       DYNAMIC_REPO:
         type: string
         description: "动态清单仓库所有者//Manifest repository owner"
