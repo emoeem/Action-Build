@@ -88,10 +88,10 @@ on:
         type: string
         description: "回退SUSFS(输入哈希或次数或-1关闭)//Rollback SUSFS (Enter commit hash, count, or -1 to disable)"
         required: false
-        # 固定到 2026-09-06 的 415e4143：此后上游 SUSFS 补丁开始调用新 API
-        # ksu_handle_post_execveat_sucompat，而 SukiSU-Ultra 的 builtin 分支尚未实现该符号，
-        # 会导致链接期 undefined symbol。等上游补齐后可清空此默认值恢复跟随最新。
-        default: "415e4143ee1dd557c54d2b3d94ef098e5d1236f4"
+        # 2026-10-24 解除 415e4143 钉子：旧补丁引用 fake_state，而最新 SukiSU-Ultra
+        # builtin 已移除该符号，导致 ace3(5.15) 链接失败 undefined symbol: fake_state。
+        # 最新 susfs 已重写 selinux_hide 不再使用 fake_state，恢复跟随上游。
+        default: ""
       DYNAMIC_REPO:
         type: string
         description: "动态清单仓库所有者//Manifest repository owner"
