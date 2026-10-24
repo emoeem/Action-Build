@@ -827,6 +827,16 @@ jobs:
           kotlin "$GITHUB_WORKSPACE/kernel_workspace/Action-Build/scripts/PatchFakePatches.kts" postfix "$GITHUB_WORKSPACE/kernel_workspace/kernel_platform/common"
           kotlin "$GITHUB_WORKSPACE/kernel_workspace/Action-Build/scripts/PatchFakePatches.kts" revert "$GITHUB_WORKSPACE/kernel_workspace/kernel_platform/common"
 
+      - name: Fix missing susfs_def.h declarations after rejected include hunks
+        if: ${{ github.event.inputs.SUSFS_META != '-1' }}
+        run: |
+          if [ -f "$GITHUB_WORKSPACE/scripts/fix_sukisu_susfs_rejects.sh" ]; then
+            bash "$GITHUB_WORKSPACE/scripts/fix_sukisu_susfs_rejects.sh"
+          else
+            curl -fsSL "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}/scripts/fix_sukisu_susfs_rejects.sh" -o /tmp/fix_sukisu_susfs_rejects.sh
+            bash /tmp/fix_sukisu_susfs_rejects.sh
+          fi
+
       # OGKI转换GKI，无需修改 dtbo 开机
       - name: Apply Convert HMBIRD_OGKI to HMBIRD_GKI
         if: ${{ (fromJSON(env.VERSIONLEVEL) > 6 || (fromJSON(env.VERSIONLEVEL) == 6 && fromJSON(env.PATCHLEVEL) >= 6)) && github.event.inputs.SCHED_HMBIRD == 'false' }}
